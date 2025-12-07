@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Application.Dtos;
 using Application.IServices;
 using Domain.Entity;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,14 +24,15 @@ public class AuthController : ControllerBase
     {
         await _authService.CreateUserAsync(registerDto);
         return Ok("User Registered Successfully");
+      
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         var userLogin = await _authService.LoginAsync(loginDto);
-
-        return Ok(userLogin);
+        var result = ResponseModel<object>.SuccessResponse(userLogin);
+        return Ok(result);
     }
 
     [Authorize]

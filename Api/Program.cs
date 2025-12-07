@@ -1,4 +1,5 @@
 using Auth.Configurations;
+using Auth.MIddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,19 +11,23 @@ builder.Services.AddDbConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 var app = builder.Build();
+
 
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 app.Run();
+
+
 
 // Domain -  > Entity, Exceptions, Enum, Irepository, Models.
 // Infrastructure -> bg Services, DbConfig, Helper Methods, Migrations, Repositories, Seeder, Wrapeprs.
