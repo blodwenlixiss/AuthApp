@@ -12,22 +12,10 @@ public class AuthRepository : IAuthRepository
     private readonly AppDbContext _context;
 
 
-    public AuthRepository(UserManager<ApplicationUser> manager, AppDbContext context)
+    public AuthRepository(AppDbContext context, UserManager<ApplicationUser> userManager)
     {
-        _userManager = manager;
         _context = context;
-    }
-
-    public async Task CreateUserAsync(ApplicationUser user, string password)
-    {
-         await _userManager.CreateAsync(user, password);
-         await _context.SaveChangesAsync();
-    }
-
-    public async Task<ApplicationUser?> FindUserByEmailAsync(string email)
-    {
-        var user = await _context.ApplicationUsers.FirstOrDefaultAsync(u=>u.Email == email);
-        return user;
+        _userManager = userManager;
     }
 
     public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
@@ -35,24 +23,5 @@ public class AuthRepository : IAuthRepository
         var userList = await _context.ApplicationUsers.ToListAsync();
 
         return userList;
-    }
-
-    public async Task<ApplicationUser?> FindUserByIdAsync(string userId)
-    {
-        var user = await _userManager.FindByIdAsync(userId);
-        return user;
-    }
-
-    public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
-    {
-        var userPassword = await _userManager.CheckPasswordAsync(user, password);
-        return userPassword;
-    }
-
-
-    public async Task<IdentityResult> UpdateUserAsync(ApplicationUser user)
-    {
-        var userUpdate = await _userManager.UpdateAsync(user);
-        return userUpdate;
     }
 }

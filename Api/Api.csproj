@@ -28,7 +28,7 @@
 
     <ItemGroup>
         <Folder Include="Extensions\"/>
-        <Folder Include="MIddleware\"/>
+        <Folder Include="MIddleware\" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj"/>

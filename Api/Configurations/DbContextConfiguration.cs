@@ -37,9 +37,10 @@ public static class DbContextConfiguration
 
         // services.AddScoped<ITokenService, TokenService>();
 
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IAuthService,AuthService>();
         services.AddScoped<IAuthRepository,AuthRepository>();
+        
 
         return services;
     }

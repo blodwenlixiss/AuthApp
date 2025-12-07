@@ -162,3 +162,4 @@ C:\Users\Luka\RiderProjects\Authentication\api\obj\Debug\net9.0\refint\Api.dll
 C:\Users\Luka\RiderProjects\Authentication\api\obj\Debug\net9.0\Api.pdb
 C:\Users\Luka\RiderProjects\Authentication\api\obj\Debug\net9.0\Api.genruntimeconfig.cache
 C:\Users\Luka\RiderProjects\Authentication\api\obj\Debug\net9.0\ref\Api.dll
+C:\Users\Luka\RiderProjects\Authentication\Api\obj\Debug\net9.0\Api.sourcelink.json

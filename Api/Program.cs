@@ -9,7 +9,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
-
+builder.Services.AddDistributedMemoryCache();
 var app = builder.Build();
 
 

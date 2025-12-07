@@ -11,7 +11,8 @@ public static class UserMapper
         {
             Firstname = registerDto.Firstname,
             Lastname = registerDto.Lastname,
-            Email = registerDto.Email
+            Email = registerDto.Email,
+            UserName = registerDto.Email
         };
 
         return applicationUser;

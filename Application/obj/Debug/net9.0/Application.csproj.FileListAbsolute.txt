@@ -15,3 +15,4 @@ C:\Users\Luka\RiderProjects\Authentication\Application\obj\Debug\net9.0\Applicat
 C:\Users\Luka\RiderProjects\Authentication\Application\obj\Debug\net9.0\refint\Application.dll
 C:\Users\Luka\RiderProjects\Authentication\Application\obj\Debug\net9.0\Application.pdb
 C:\Users\Luka\RiderProjects\Authentication\Application\obj\Debug\net9.0\ref\Application.dll
+C:\Users\Luka\RiderProjects\Authentication\Application\obj\Debug\net9.0\Application.sourcelink.json
