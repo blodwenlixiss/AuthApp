@@ -4,6 +4,7 @@ using Domain.Entity;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Infrastructure.UserState;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,9 +39,9 @@ public static class DbContextConfiguration
         // services.AddScoped<ITokenService, TokenService>();
 
         services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<IAuthService,AuthService>();
-        services.AddScoped<IAuthRepository,AuthRepository>();
-        
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAuthRepository, AuthRepository>();
+        services.AddScoped<IUserState, UserState>();
 
         return services;
     }

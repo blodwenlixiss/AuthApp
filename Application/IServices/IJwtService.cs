@@ -6,4 +6,5 @@ namespace Application.IServices;
 public interface IJwtService
 {
  string GenerateAccessToken(ApplicationUser user);
+ public string GenerateRefreshToken();
 }

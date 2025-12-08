@@ -24,4 +24,34 @@ public class AuthRepository : IAuthRepository
 
         return userList;
     }
+    public async Task CreateRefreshTokenAsync(RefreshToken refreshToken)
+    {
+        await _context.RefreshTokens.AddAsync(refreshToken);
+    }
+
+    public async Task<IEnumerable<RefreshToken>?> GetRefreshTokenFromUserId(string userId)
+    {
+        var refrehsToken = _context.RefreshTokens
+            .Include(rf => rf.User)
+            .Where(r => r.IsRevoked == false && r.UserId == userId);
+
+        return await Task.FromResult(refrehsToken);
+    }
+
+    public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
+    {
+        var refreshToken = await _context.RefreshTokens
+            .Include(rf => rf.User)
+            .FirstOrDefaultAsync(r => r.Token == token);
+        return refreshToken;
+    }
+
+    public async Task InvalidateRefreshToken(string token)
+    {
+        var refreshToken = await GetRefreshTokenAsync(token);
+        if (refreshToken != null)
+        {
+            refreshToken.IsRevoked = true;
+        }
+    }
 }

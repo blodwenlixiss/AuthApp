@@ -24,7 +24,6 @@ public class AuthController : ControllerBase
     {
         await _authService.CreateUserAsync(registerDto);
         return Ok("User Registered Successfully");
-      
     }
 
     [HttpPost("login")]
@@ -36,10 +35,11 @@ public class AuthController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("logout/{userId}")]
-    public async Task<IActionResult> LogoOut(string userId)
+    [HttpPost("logout")]
+    public async Task<IActionResult> LogoOut()
     {
-        return Ok('s');
+        await _authService.Logout();
+        return NoContent();
     }
 
     [Authorize]

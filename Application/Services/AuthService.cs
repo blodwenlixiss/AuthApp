@@ -6,7 +6,9 @@ using Azure.Core;
 using Domain.Entity;
 using Domain.Exceptions;
 using Domain.Interfaces;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 
@@ -17,19 +19,23 @@ public class AuthService : IAuthService
     private readonly IAuthRepository _authRepository;
     private readonly UserManager<ApplicationUser> _manager;
     private readonly IJwtService _jwtService;
-    private readonly IConfiguration _configuration;
+    private readonly AppDbContext _context;
+    private readonly IUserState _userState;
+
 
     public AuthService(
+        IUserState userState,
+        AppDbContext context,
         UserManager<ApplicationUser> manager,
         IAuthRepository repo,
-        IJwtService jwtService,
-        IConfiguration configuration
+        IJwtService jwtService
     )
     {
+        _userState = userState;
+        _context = context;
         _authRepository = repo;
         _manager = manager;
         _jwtService = jwtService;
-        _configuration = configuration;
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
@@ -38,18 +44,46 @@ public class AuthService : IAuthService
                    throw new NotFoundException("User not found");
 
         var accessToken = _jwtService.GenerateAccessToken(user);
+        var refreshToken = _jwtService.GenerateRefreshToken();
+
+        await _authRepository.CreateRefreshTokenAsync(MapToRefreshToken(user.Id, refreshToken));
+
+        await _context.SaveChangesAsync();
 
         var response = new AuthResponseDto
         {
-            UserId = user.Id,
-            FirstName = user.Firstname,
-            LastName = user.Lastname,
-            Email = user.Email!,
             AccessToken = accessToken,
-            Expiration = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpirationMinutes"]!))
+            RefreshToken = refreshToken
         };
 
         return response;
+    }
+
+    public async Task Logout()
+    {
+        var user = _userState.GetCurrentUser();
+        var refreshToken = await _authRepository.GetRefreshTokenFromUserId(user.Id);
+
+        if (refreshToken is null)
+            throw new NotFoundException("Refreshtoken is not found");
+
+        foreach (var refresh in refreshToken)
+        {
+            refresh.IsRevoked = true;
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    private RefreshToken MapToRefreshToken(string userId, string token)
+    {
+        return new RefreshToken()
+        {
+            UserId = userId,
+            Token = token,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+        };
     }
 
 
